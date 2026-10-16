@@ -11,6 +11,8 @@ export interface ModelInfo {
   contextWindow: number;
   note: string;
   recommended?: boolean;
+  /** Typical time to first token: fast ~2 s, medium ~10 s, slow ~40 s (reasoning models). */
+  latencyHint: "fast" | "medium" | "slow";
 }
 
 interface CatalogEntry extends ModelInfo {
@@ -18,15 +20,15 @@ interface CatalogEntry extends ModelInfo {
 }
 
 const CATALOG: CatalogEntry[] = [
-  { id: "@cf/meta/llama-4-scout-17b-16e-instruct", label: "Llama 4 Scout", vendor: "Meta", contextWindow: 131072, note: "Fast all-rounder (17B active MoE); the default", family: "llama" },
-  { id: "@cf/meta/llama-3.3-70b-instruct-fp8-fast", label: "Llama 3.3 70B", vendor: "Meta", contextWindow: 24000, note: "Dense 70B; solid general answers, shorter context", family: "llama" },
-  { id: "@cf/openai/gpt-oss-120b", label: "GPT-OSS 120B", vendor: "OpenAI", contextWindow: 128000, note: "Strong reasoning; follows quoting rules well", recommended: true, family: "gpt-oss" },
-  { id: "@cf/deepseek-ai/deepseek-v4-pro-0813", label: "DeepSeek V4 Pro", vendor: "DeepSeek", contextWindow: 1000000, note: "Strongest reasoning; best for careful synthesis", recommended: true, family: "openai" },
-  { id: "@cf/moonshotai/kimi-k2.6", label: "Kimi K2.6", vendor: "Moonshot AI", contextWindow: 262144, note: "1T-parameter MoE; thorough, long answers", family: "openai" },
-  { id: "@cf/google/gemma-4-26b-a4b-it", label: "Gemma 4 26B", vendor: "Google", contextWindow: 256000, note: "Efficient MoE with long context", family: "openai" },
-  { id: "@cf/nvidia/nemotron-3-120b-a12b", label: "Nemotron 3 120B", vendor: "NVIDIA", contextWindow: 256000, note: "Reasoning-tuned MoE with long context", family: "openai" },
-  { id: "@cf/qwen/qwen3.8-27b", label: "Qwen 3.8 27B", vendor: "Qwen", contextWindow: 262144, note: "Multilingual, long context", family: "openai" },
-  { id: "@cf/mistralai/mistral-small-3.1-24b-instruct", label: "Mistral Small 3.1", vendor: "Mistral AI", contextWindow: 128000, note: "Compact and quick; concise answers", family: "llama" },
+  { id: "@cf/meta/llama-4-scout-17b-16e-instruct", label: "Llama 4 Scout", vendor: "Meta", contextWindow: 131072, note: "Fast all-rounder (17B active MoE); the default", recommended: true, latencyHint: "fast", family: "llama" },
+  { id: "@cf/meta/llama-3.3-70b-instruct-fp8-fast", label: "Llama 3.3 70B", vendor: "Meta", contextWindow: 24000, note: "Dense 70B; solid general answers, shorter context", latencyHint: "fast", family: "llama" },
+  { id: "@cf/openai/gpt-oss-120b", label: "GPT-OSS 120B", vendor: "OpenAI", contextWindow: 128000, note: "Fast and smart, but tends to paraphrase quotes", latencyHint: "fast", family: "gpt-oss" },
+  { id: "@cf/deepseek-ai/deepseek-v4-pro-0813", label: "DeepSeek V4 Pro", vendor: "DeepSeek", contextWindow: 1000000, note: "Strongest reasoning; best for careful synthesis", recommended: true, latencyHint: "slow", family: "openai" },
+  { id: "@cf/moonshotai/kimi-k2.6", label: "Kimi K2.6", vendor: "Moonshot AI", contextWindow: 262144, note: "1T-parameter MoE; thorough, long answers", latencyHint: "medium", family: "openai" },
+  { id: "@cf/google/gemma-4-26b-a4b-it", label: "Gemma 4 26B", vendor: "Google", contextWindow: 256000, note: "Efficient MoE with long context", latencyHint: "fast", family: "openai" },
+  { id: "@cf/nvidia/nemotron-3-120b-a12b", label: "Nemotron 3 120B", vendor: "NVIDIA", contextWindow: 256000, note: "Reasoning-tuned MoE with long context", latencyHint: "medium", family: "openai" },
+  { id: "@cf/qwen/qwen3.8-27b", label: "Qwen 3.8 27B", vendor: "Qwen", contextWindow: 262144, note: "Multilingual, long context", latencyHint: "fast", family: "openai" },
+  { id: "@cf/mistralai/mistral-small-3.1-24b-instruct", label: "Mistral Small 3.1", vendor: "Mistral AI", contextWindow: 128000, note: "Compact and quick; concise answers", latencyHint: "fast", family: "llama" },
 ];
 
 export const MODELS: ModelInfo[] = CATALOG.map(({ family: _f, ...info }) => info);

@@ -9,7 +9,7 @@ import {
   type ReactNode,
 } from "react";
 import { api, ApiError, setErrorHandler, setUnauthorizedHandler } from "../api/client";
-import type { Brain, BrainDocument, Conversation, ModelInfo } from "../api/types";
+import { isWarmingUp, type Brain, type BrainDocument, type Conversation, type ModelInfo } from "../api/types";
 import { parseHash, writeHash, type Route } from "../lib/route";
 import { useToast } from "../components/Toasts";
 
@@ -278,8 +278,8 @@ export function AppProvider({ children }: { children: ReactNode }) {
     void refreshDocuments();
   }, [auth, brainId, refreshConversations, refreshDocuments]);
 
-  // Poll while any document is pending.
-  const anyPending = documents.some((d) => d.indexStatus === "pending");
+  // Poll while any document is pending, or indexed but not yet searchable in Vectorize.
+  const anyPending = documents.some((d) => d.indexStatus === "pending" || isWarmingUp(d));
   useEffect(() => {
     if (!anyPending || auth !== "ready") return;
     const t = window.setInterval(() => void refreshDocuments(), 2500);

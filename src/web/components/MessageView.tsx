@@ -101,18 +101,7 @@ function AssistantMessage({ message, modelLabel }: { message: UiMessage; modelLa
     <div className="group flex flex-col items-start">
       <div className="w-full max-w-full">
         {empty && message.streaming ? (
-          <div className="flex items-center gap-1.5 py-2" aria-label="Thinking">
-            {[0, 1, 2].map((i) => (
-              <span
-                key={i}
-                className="size-1.5 rounded-full bg-faint motion-safe:animate-bounce"
-                style={{ animationDelay: `${i * 120}ms` }}
-              />
-            ))}
-            <span className="ml-2 text-xs text-muted">
-              {citations.length ? `Reading ${citations.length} passages…` : "Searching sources…"}
-            </span>
-          </div>
+          <Thinking passages={citations.length} />
         ) : (
           <div className={cx("md", message.streaming && "stream-caret")}>
             <Markdown components={components}>{text}</Markdown>
@@ -169,6 +158,36 @@ function AssistantMessage({ message, modelLabel }: { message: UiMessage; modelLa
           )}
         </div>
       </div>
+    </div>
+  );
+}
+
+/** Placeholder while a reply streams with no text yet (reasoning models can take 30–60 s). */
+function Thinking({ passages }: { passages: number }) {
+  const [seconds, setSeconds] = useState(0);
+  useEffect(() => {
+    const start = Date.now();
+    const t = window.setInterval(() => setSeconds(Math.floor((Date.now() - start) / 1000)), 1000);
+    return () => window.clearInterval(t);
+  }, []);
+  return (
+    <div className="inline-flex flex-col gap-1 rounded-2xl rounded-bl-md bg-surface-2 px-4 py-2.5" role="status">
+      <div className="flex items-center gap-1.5">
+        {[0, 1, 2].map((i) => (
+          <span
+            key={i}
+            className="size-1.5 rounded-full bg-faint motion-safe:animate-bounce"
+            style={{ animationDelay: `${i * 120}ms` }}
+            aria-hidden
+          />
+        ))}
+        <span className="ml-2 text-sm text-fg">Thinking…</span>
+        <span className="text-xs text-muted">
+          {passages ? `reading ${passages} passages · ` : "searching sources · "}
+          <span className="tabular-nums">{seconds}s</span>
+        </span>
+      </div>
+      {seconds >= 20 && <p className="text-xs text-muted">Reasoning models like DeepSeek can take up to a minute.</p>}
     </div>
   );
 }

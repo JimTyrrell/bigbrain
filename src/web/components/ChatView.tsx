@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
-import { FileText, Menu, Pencil, Plus } from "lucide-react";
+import { Clock, FileText, Menu, Pencil, Plus } from "lucide-react";
 import { api, ApiError } from "../api/client";
-import type { Conversation, Message } from "../api/types";
+import { isWarmingUp, type Conversation, type Message } from "../api/types";
 import { useApp } from "../state/AppState";
 import { Composer, type ComposerHandle } from "./Composer";
 import { MessageView, type UiMessage } from "./MessageView";
@@ -277,6 +277,7 @@ export function ChatView() {
   /* ---------- render ---------- */
   const docCount = app.documentsLoaded ? app.documents.length : brain.documentCount;
   const showEmpty = !convId && messages.length === 0;
+  const warming = app.documents.some(isWarmingUp);
   const examples = [
     `What are ${brain.name}'s most important ideas?`,
     `What does ${brain.name} say is the biggest mistake beginners make?`,
@@ -409,6 +410,15 @@ export function ChatView() {
       </div>
 
       <div className="bg-bg pt-2">
+        {warming && (
+          <p
+            className="mx-auto flex w-full max-w-3xl items-center gap-1.5 px-5 pb-1.5 text-xs text-warning sm:px-7"
+            title="Cloudflare Vectorize takes 1–3 minutes to make new vectors searchable"
+          >
+            <Clock className="size-3.5 shrink-0" aria-hidden />
+            Some documents are still becoming searchable
+          </p>
+        )}
         <Composer
           ref={composerRef}
           onSend={(t) => void send(t)}

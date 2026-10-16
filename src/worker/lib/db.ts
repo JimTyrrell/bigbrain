@@ -25,6 +25,7 @@ export interface DocumentRow {
   index_status: string;
   index_error: string | null;
   chunk_count: number;
+  searchable: number;
   created_at: string;
   updated_at: string;
 }
@@ -84,6 +85,7 @@ export const toDocument = (r: DocumentRow, withContent = false) => ({
   indexStatus: r.index_status,
   indexError: r.index_error,
   chunkCount: r.chunk_count,
+  searchable: r.searchable === 1,
   createdAt: r.created_at,
   updatedAt: r.updated_at,
 });
@@ -135,7 +137,7 @@ export async function getBrain(env: Env, id: string): Promise<BrainRow> {
 }
 
 const DOC_COLUMNS = `id, brain_id, title, source_url, source_type, mime_type, bytes, index_status,
-  index_error, chunk_count, created_at, updated_at`;
+  index_error, chunk_count, searchable, created_at, updated_at`;
 
 export async function getDocument(env: Env, id: string, withContent = false): Promise<DocumentRow> {
   const cols = withContent ? `${DOC_COLUMNS}, content` : DOC_COLUMNS;

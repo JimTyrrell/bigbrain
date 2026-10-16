@@ -31,7 +31,8 @@ type ModelInfo = {
   vendor: string;        // "Meta"
   contextWindow: number; // tokens
   note: string;          // one-line "best for"
-  recommended?: boolean; // highlight in picker
+  recommended?: boolean; // highlight in picker (Llama 4 Scout, DeepSeek V4 Pro: best verbatim quoting)
+  latencyHint: "fast" | "medium" | "slow"; // time to first token: ~2 s / ~10 s / ~40 s
 };
 ```
 
@@ -51,6 +52,7 @@ type Document = {
   id; brainId; title; sourceUrl: string | null; sourceType: "upload" | "text" | "transcript";
   mimeType: string | null; bytes: number; content?: string;   // content only on GET one
   indexStatus: "pending" | "indexed" | "error"; indexError: string | null; chunkCount: number;
+  searchable: boolean; // false while Vectorize has not yet made this doc's new vectors queryable
   createdAt; updatedAt;
 };
 ```
@@ -62,6 +64,9 @@ type Document = {
     paragraphs); everything else goes through `env.AI.toMarkdown()`.
   - → `201 { document }` with `indexStatus:"pending"`; indexing runs in `ctx.waitUntil`.
   - Max body 25 MB → `413 too_large`. Unsupported format → `415 unsupported_type`.
+  - Vectorize makes new vectors queryable 1–3 min after upsert, so a freshly indexed doc is
+    `indexStatus:"indexed", searchable:false` until `VECTORIZE.describe().processedUpToDatetime`
+    passes its write time (checked on the two GETs below; forced true after 10 min).
 - `GET /api/documents/:id` → `{ document }` including `content`
 - `PATCH /api/documents/:id` `{ title?, sourceUrl?, content? }` → `{ document }`.
   If `content` changed, the doc is re-indexed (status back to `pending`).
@@ -97,7 +102,8 @@ type Message = { id; conversationId; role: "user"|"assistant"; content: string; 
 
 ### How the model is prompted (shared understanding for UI and validator)
 System prompt (summarised): "You answer ONLY from the provided passages from {brain.name}
-({brain.description}). Quote them verbatim in quotation marks and cite as [n]. Never invent
+({brain.description}). Quote them verbatim in quotation marks (character-for-character from a
+single passage, "…" for omissions, never merging passages) and cite as [n]. Never invent
 a quote. Structure: **What {name} said** (quotes + faithful synthesis), then optionally
 **Adjacent insight** labelled as NOT from the source and attributed to the type of
 practitioner it comes from. If nothing relevant, say so." Passages are given as

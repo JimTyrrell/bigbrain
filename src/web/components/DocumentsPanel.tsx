@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState, type DragEvent, type FormEvent } from "react";
-import { ArrowUp, CircleAlert, ClipboardPaste, FileText, FileUp, Pencil, Plus, RefreshCw, Trash, Upload } from "lucide-react";
+import { ArrowUp, CircleAlert, ClipboardPaste, Clock, FileText, FileUp, Pencil, Plus, RefreshCw, Trash, Upload } from "lucide-react";
 import { api } from "../api/client";
-import type { BrainDocument } from "../api/types";
+import { isWarmingUp, type BrainDocument } from "../api/types";
 import { useApp } from "../state/AppState";
 import { Modal, useConfirm } from "./Dialog";
 import { useToast } from "./Toasts";
@@ -69,6 +69,15 @@ function StatusPill({ doc }: { doc: BrainDocument }) {
       >
         <CircleAlert className="size-3 shrink-0" aria-hidden />
         <span className="truncate">Error{doc.indexError ? `: ${doc.indexError}` : ""}</span>
+      </span>
+    );
+  if (isWarmingUp(doc))
+    return (
+      <span
+        className="inline-flex items-center gap-1.5 rounded-full bg-warning-soft px-2 py-0.5 text-xs font-medium text-warning"
+        title="Cloudflare Vectorize takes 1–3 minutes to make new vectors searchable"
+      >
+        <Clock className="size-3" aria-hidden /> Indexed · searchable soon
       </span>
     );
   return (

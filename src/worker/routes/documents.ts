@@ -3,7 +3,7 @@ import type { AppEnv } from "../env";
 import { deleteDocument, getBrain, getDocument, listDocuments, toDocument } from "../lib/db";
 import { HttpError, badRequest } from "../lib/errors";
 import { newId, nowIso } from "../lib/ids";
-import { fileToMarkdown, indexDocument } from "../lib/ingest";
+import { fileToMarkdown, indexDocument, refreshSearchable } from "../lib/ingest";
 import { captionsToMarkdown, looksLikeCaptions } from "../lib/vtt";
 import { optString, optUrl, parseUrl, readJson, reqString } from "../lib/validate";
 
@@ -82,6 +82,7 @@ async function readNewDocument(c: Context<AppEnv>): Promise<NewDoc> {
 
 app.get("/brains/:brainId/documents", async (c) => {
   const brain = await getBrain(c.env, c.req.param("brainId"));
+  await refreshSearchable(c.env, brain.id);
   return c.json({ documents: (await listDocuments(c.env, brain.id)).map((d) => toDocument(d)) });
 });
 
@@ -100,7 +101,11 @@ app.post("/brains/:brainId/documents", async (c) => {
   return c.json({ document: toDocument(await getDocument(c.env, id)) }, 201);
 });
 
-app.get("/documents/:id", async (c) => c.json({ document: toDocument(await getDocument(c.env, c.req.param("id"), true), true) }));
+app.get("/documents/:id", async (c) => {
+  const doc = await getDocument(c.env, c.req.param("id"));
+  await refreshSearchable(c.env, doc.brain_id);
+  return c.json({ document: toDocument(await getDocument(c.env, doc.id, true), true) });
+});
 
 app.patch("/documents/:id", async (c) => {
   const doc = await getDocument(c.env, c.req.param("id"), true);

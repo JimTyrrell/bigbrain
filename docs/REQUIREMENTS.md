@@ -55,7 +55,9 @@ has an ID so the validator can map checks to it.
 - **R3.5** Indexing: text is chunked (~1 200 characters, ~200 overlap, paragraph-aware),
   embedded with `@cf/baai/bge-m3` (1024-dim), and upserted to Vectorize with
   `brain_id` / `doc_id` metadata. The document shows its status (pending / indexed / error)
-  and chunk count; the UI polls while pending.
+  and chunk count; the UI polls while pending. Vectorize makes new vectors queryable 1–3
+  minutes after upsert, so an indexed document shows "Indexed · searchable in ~2 min" until
+  Vectorize confirms it has processed them (`searchable`), and the UI keeps polling until then.
 - **R3.6** Transcript documents keep `[mm:ss]` timestamp markers per paragraph so quotes
   can link to the moment in the video (`...&t=784s`).
 - **R3.7** YouTube links cannot be fetched from a Worker (YouTube blocks it). Transcripts are
@@ -75,13 +77,14 @@ has an ID so the validator can map checks to it.
   one-line "best for" note. Default is **Llama 4 Scout** (`@cf/meta/llama-4-scout-17b-16e-instruct`).
   Note: Workers AI's Llama 4 is Scout (17B active / 109B total MoE), not a 70B. The 70B
   option is Llama 3.3 70B. Both are offered. The default can be changed in Settings.
+  The picker also shows a time-to-first-token hint ("~2 s", "~10 s", "~40 s to first token").
   Curated list (all currently live in the catalog):
   | Label | Model id | Notes |
   |---|---|---|
-  | Llama 4 Scout (default) | `@cf/meta/llama-4-scout-17b-16e-instruct` | 131k ctx, fast |
+  | Llama 4 Scout (default, recommended) | `@cf/meta/llama-4-scout-17b-16e-instruct` | 131k ctx, fast; verbatim quotes 3/3 |
   | Llama 3.3 70B | `@cf/meta/llama-3.3-70b-instruct-fp8-fast` | 24k ctx |
-  | GPT-OSS 120B | `@cf/openai/gpt-oss-120b` | strong reasoning, 128k |
-  | DeepSeek V4 Pro | `@cf/deepseek-ai/deepseek-v4-pro-0813` | strongest reasoning, 1M ctx |
+  | GPT-OSS 120B | `@cf/openai/gpt-oss-120b` | fast and smart, 128k; tends to paraphrase/stitch quotes (1/3–3/5 verbatim) |
+  | DeepSeek V4 Pro (recommended) | `@cf/deepseek-ai/deepseek-v4-pro-0813` | strongest reasoning, 1M ctx; verbatim quotes 3/3 (once 2/3); 30–45 s to first token |
   | Kimi K2.6 | `@cf/moonshotai/kimi-k2.6` | 1T MoE, 262k |
   | Gemma 4 26B | `@cf/google/gemma-4-26b-a4b-it` | 256k |
   | Nemotron 3 120B | `@cf/nvidia/nemotron-3-120b-a12b` | 256k |
@@ -130,8 +133,9 @@ has an ID so the validator can map checks to it.
 
 1. **Transcripts in the public repo** — default is *not* to commit third-party transcripts.
    Say the word if you want them in the repo.
-2. **Default model** — Llama 4 Scout as asked. For strict quoting, GPT-OSS 120B or DeepSeek V4
-   Pro tend to follow "quote verbatim" rules better; try them from the picker.
+2. **Default model** — Llama 4 Scout as asked. Measured verbatim-quote rates: Llama 4 Scout 3/3,
+   DeepSeek V4 Pro 3/3 (one run 2/3), GPT-OSS 120B 1/3–3/5 (it condenses/stitches quotes). Scout
+   and DeepSeek are marked Recommended; DeepSeek is slow to its first token (30–45 s).
 3. **PIN length** — 6–12 digits with lockout. Say if you want 4 digits.
 4. **GitHub login** — creating the repo and connecting Workers Builds needs a one-time GitHub
    sign-in (`gh auth login` or signing into github.com in Chrome). Everything else is done.

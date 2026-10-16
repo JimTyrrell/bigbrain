@@ -7,6 +7,7 @@ export type ModelInfo = {
   contextWindow: number;
   note: string;
   recommended?: boolean;
+  latencyHint: "fast" | "medium" | "slow";
 };
 
 export type Brain = {
@@ -34,9 +35,14 @@ export type BrainDocument = {
   indexStatus: IndexStatus;
   indexError: string | null;
   chunkCount: number;
+  /** False while Vectorize has not yet made this document's new vectors queryable (1–3 min). */
+  searchable: boolean;
   createdAt: string;
   updatedAt: string;
 };
+
+/** Indexed, but Vectorize hasn't made the new vectors queryable yet. */
+export const isWarmingUp = (d: BrainDocument) => d.indexStatus === "indexed" && d.searchable === false;
 
 export type Conversation = {
   id: string;

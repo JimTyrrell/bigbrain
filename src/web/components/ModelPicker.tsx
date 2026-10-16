@@ -4,6 +4,12 @@ import type { ModelInfo } from "../api/types";
 import { cx, formatTokens } from "../lib/format";
 import { Spinner } from "./ui";
 
+const LATENCY_LABEL: Record<ModelInfo["latencyHint"], string> = {
+  fast: "~2 s",
+  medium: "~10 s",
+  slow: "~40 s to first token",
+};
+
 export function ModelPicker({
   models,
   value,
@@ -140,6 +146,12 @@ export function ModelPicker({
                   </div>
                   <div className="mt-0.5 text-xs text-muted">
                     {m.vendor} · {formatTokens(m.contextWindow)} context
+                    {m.latencyHint && (
+                      <span title="Typical time to first token">
+                        {" "}
+                        · {LATENCY_LABEL[m.latencyHint]}
+                      </span>
+                    )}
                   </div>
                   {m.note && <div className="mt-1 text-xs leading-5 text-fg/80">{m.note}</div>}
                 </div>

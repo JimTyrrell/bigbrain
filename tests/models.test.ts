@@ -112,7 +112,9 @@ describe("model adapters", () => {
 
   it("catalog matches the curated list", () => {
     expect(MODELS).toHaveLength(9);
-    expect(MODELS.filter((m) => m.recommended).map((m) => m.label)).toEqual(["GPT-OSS 120B", "DeepSeek V4 Pro"]);
+    expect(MODELS.filter((m) => m.recommended).map((m) => m.label)).toEqual(["Llama 4 Scout", "DeepSeek V4 Pro"]);
+    expect(MODELS.find((m) => m.label === "DeepSeek V4 Pro")?.latencyHint).toBe("slow");
+    expect(MODELS.every((m) => ["fast", "medium", "slow"].includes(m.latencyHint))).toBe(true);
     expect(familyOf("@cf/openai/gpt-oss-120b")).toBe("gpt-oss");
     expect(familyOf("@cf/mistralai/mistral-small-3.1-24b-instruct")).toBe("llama");
     expect(familyOf("@cf/qwen/qwen3.8-27b")).toBe("openai");

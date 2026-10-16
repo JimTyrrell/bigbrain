@@ -21,7 +21,7 @@
       "migrations_dir": "migrations"
     }
   ],
-  "vectorize": [{ "binding": "VECTORIZE", "index_name": "bigbrain-vectors" }],
+  "vectorize": [{ "binding": "VECTORIZE", "index_name": "bigbrain-vectors", "remote": true }],
   "kv_namespaces": [{ "binding": "KV", "id": "90a350cf2180411c9bb689002d85b7cb" }],
   "observability": { "enabled": true },
   "vars": {
