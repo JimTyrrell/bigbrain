@@ -7,5 +7,6 @@ export default defineConfig({
   root: "src/web",
   plugins: [react(), tailwindcss()],
   build: { outDir: "../../dist/web", emptyOutDir: true },
-  server: { proxy: { "/api": "http://localhost:8787" } },
+  // Proxy API calls to `wrangler dev`, but not the SPA's own source modules under src/web/api/*.ts.
+  server: { proxy: { "^/api/(?![^?]*\\.tsx?(?:\\?|$))": "http://localhost:8787" } },
 });

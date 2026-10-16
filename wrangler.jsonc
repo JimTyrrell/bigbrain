@@ -4,8 +4,8 @@
   "main": "src/worker/index.ts",
   "compatibility_date": "2026-10-01",
   "compatibility_flags": ["nodejs_compat"],
-  "account_id": "7f7032ce4d80f42047c82217657811b8",
-  "routes": [{ "pattern": "bigbrain.designaticlabs.com", "custom_domain": true }],
+  "account_id": "c3f0432a9a3150e81227f6ad8e98656a",
+  "routes": [{ "pattern": "bigbrain.designaticlabs.com", "custom_domain": true, "zone_name": "designaticlabs.com" }],
   "assets": {
     "directory": "./dist/web",
     "binding": "ASSETS",
@@ -17,12 +17,12 @@
     {
       "binding": "DB",
       "database_name": "bigbrain-db",
-      "database_id": "6b09db0d-5e64-426e-82b3-e594b2f53b85",
+      "database_id": "67408d50-30a2-463a-bc1b-93f0abd32543",
       "migrations_dir": "migrations"
     }
   ],
   "vectorize": [{ "binding": "VECTORIZE", "index_name": "bigbrain-vectors" }],
-  "kv_namespaces": [{ "binding": "KV", "id": "6b4c69be0e634170994513edd4c93aaa" }],
+  "kv_namespaces": [{ "binding": "KV", "id": "90a350cf2180411c9bb689002d85b7cb" }],
   "observability": { "enabled": true },
   "vars": {
     "DEFAULT_MODEL": "@cf/meta/llama-4-scout-17b-16e-instruct",

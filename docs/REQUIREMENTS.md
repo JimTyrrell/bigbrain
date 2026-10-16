@@ -11,7 +11,7 @@ has an ID so the validator can map checks to it.
 
 - **R1.1** Source lives in a public GitHub repo (`JimTyrrell/bigbrain`). The working copy is
   local (`~/Projects/bigbrain`), not inside Google Drive.
-- **R1.2** Deploys to Cloudflare Workers on the `Thedesignatic@gmail.com` account, served at
+- **R1.2** Deploys to Cloudflare Workers on the `Jim@rapidsaasmethod.com` account (the one that owns the `designaticlabs.com` zone), served at
   `bigbrain.designaticlabs.com` as a Workers custom domain (DNS + TLS managed by Cloudflare).
 - **R1.3** Pushes to `main` deploy automatically via Cloudflare **Workers Builds** (the
   GitHub integration). The build runs `npm run build`; the deploy command applies D1
