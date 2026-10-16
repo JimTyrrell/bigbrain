@@ -1,0 +1,10 @@
+node_modules/
+dist/
+.wrangler/
+.dev.vars
+.env*
+*.log
+.DS_Store
+# Third-party transcripts are seeded locally, never committed to the public repo
+seeds/raw/
+seeds/content/

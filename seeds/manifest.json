@@ -1,0 +1,27 @@
+{
+  "brains": [
+    {
+      "name": "Alex Hormozi",
+      "description": "Alex Hormozi — founder of Acquisition.com; business growth, offers, marketing, sales, scaling.",
+      "rawDir": "seeds/raw/hormozi",
+      "videos": [
+        { "id": "eq1bnI0JoXU", "title": "8 Entrepreneurs Compete For $100,000", "url": "https://www.youtube.com/watch?v=eq1bnI0JoXU", "published": "2026-10-02" },
+        { "id": "B-ogfFiQpXg", "title": "$100M Worth of Marketing Knowledge in 32 Minutes | Scale or Fail", "url": "https://www.youtube.com/watch?v=B-ogfFiQpXg", "published": "2026-08-07" },
+        { "id": "8VqSFBMMS4M", "title": "If You Hate Selling, Please Watch This | Scale or Fail", "url": "https://www.youtube.com/watch?v=8VqSFBMMS4M", "published": "2026-07-24" },
+        { "id": "j2TZMFkj71Q", "title": "Building a $3,000,000 Business for a Stranger in 31 Minutes | Scale or Fail", "url": "https://www.youtube.com/watch?v=j2TZMFkj71Q", "published": "2026-07-10" }
+      ]
+    },
+    {
+      "name": "Dan Harrison",
+      "description": "Dan Harrison — coaching-business and Skool community growth; high-ticket client acquisition, MRR, AI-assisted offers.",
+      "rawDir": "seeds/raw/harrison",
+      "videos": [
+        { "id": "B85So_sK700", "title": "$14K/mrr to $78K/mrr in 2 Months (It Wasn't the Funnel)", "url": "https://www.youtube.com/watch?v=B85So_sK700", "published": "2026-09-15" },
+        { "id": "_ZyGdvEAQV4", "title": "I'm Building a $300K/MRR Business with AI & Skool — (Month 2)", "url": "https://www.youtube.com/watch?v=_ZyGdvEAQV4", "published": "2026-09-02" },
+        { "id": "_bZbIweW8M4", "title": "The Only 3 Things Your Coaching Business Actually Needs", "url": "https://www.youtube.com/watch?v=_bZbIweW8M4", "published": "2026-07-28" },
+        { "id": "GCYFth_mTmU", "title": "Stop Chasing MRR on Skool (Do This Instead)", "url": "https://www.youtube.com/watch?v=GCYFth_mTmU", "published": "2026-06-19" },
+        { "id": "8kKu9Mw4MEU", "title": "The New Model for Getting High-Ticket Coaching Clients in 2026 (What's Actually Working)", "url": "https://www.youtube.com/watch?v=8kKu9Mw4MEU", "published": "2026-06-13" }
+      ]
+    }
+  ]
+}

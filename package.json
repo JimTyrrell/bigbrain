@@ -1,0 +1,39 @@
+{
+  "name": "bigbrain",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "BigBrain: personal RAG chat over named 'brains' of documents, running entirely on Cloudflare Workers AI.",
+  "scripts": {
+    "dev": "wrangler dev",
+    "dev:web": "vite",
+    "build": "vite build",
+    "typecheck": "tsc -p tsconfig.json --noEmit && tsc -p src/web/tsconfig.json --noEmit",
+    "test": "vitest run",
+    "migrate:remote": "wrangler d1 migrations apply bigbrain-db --remote",
+    "migrate:local": "wrangler d1 migrations apply bigbrain-db --local",
+    "deploy": "npm run build && npm run migrate:remote && wrangler deploy",
+    "seed": "node scripts/seed.mjs",
+    "validate": "node validate/validate.mjs"
+  },
+  "dependencies": {
+    "hono": "^4.13.13",
+    "lucide-react": "^1.58.0",
+    "react": "^19.3.1",
+    "react-dom": "^19.3.1",
+    "react-markdown": "^10.1.0"
+  },
+  "devDependencies": {
+    "@cloudflare/vitest-pool-workers": "^0.23.0",
+    "@cloudflare/workers-types": "^5.20261016.1",
+    "@tailwindcss/vite": "^4.3.3",
+    "@types/react": "^19.3.0",
+    "@types/react-dom": "^19.3.0",
+    "@vitejs/plugin-react": "^6.1.2",
+    "tailwindcss": "^4.3.3",
+    "typescript": "^7.0.2",
+    "vite": "^8.3.4",
+    "vitest": "^5.0.5",
+    "wrangler": "^4.151.1"
+  }
+}
