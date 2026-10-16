@@ -10,9 +10,9 @@
     "build": "vite build",
     "typecheck": "tsc -p tsconfig.json --noEmit && tsc -p src/web/tsconfig.json --noEmit",
     "test": "vitest run",
-    "migrate:remote": "wrangler d1 migrations apply bigbrain-db --remote",
-    "migrate:local": "wrangler d1 migrations apply bigbrain-db --local",
-    "deploy": "npm run build && npm run migrate:remote && wrangler deploy",
+    "migrate:remote": "wrangler d1 migrations apply DB --remote",
+    "migrate:local": "wrangler d1 migrations apply DB --local",
+    "deploy": "npm run migrate:remote && wrangler deploy",
     "seed": "node scripts/seed.mjs",
     "validate": "node validate/validate.mjs"
   },

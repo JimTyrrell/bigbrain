@@ -75,7 +75,8 @@ export type Message = {
   createdAt: string;
 };
 
-export type AuthStatus = { pinSet: boolean; authenticated: boolean };
+export type ResetInfo = { kvDashboardUrl: string; keys: string[] };
+export type AuthStatus = { pinSet: boolean; authenticated: boolean; reset?: ResetInfo };
 export type Settings = { defaultModel: string; models: ModelInfo[] };
 export type ModelsResponse = { models: ModelInfo[]; defaultModel: string };
 export type Transcription = { text: string; language: string | null; durationSeconds: number | null };

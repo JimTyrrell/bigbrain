@@ -12,7 +12,10 @@ Every route below except `GET /auth/status`, `POST /auth/setup`, `POST /auth/log
 - `GET /api/health` → `{ ok: true, version: string, time: string }`
 
 ## Auth
-- `GET /api/auth/status` → `{ pinSet: boolean, authenticated: boolean }`
+- `GET /api/auth/status` → `{ pinSet: boolean, authenticated: boolean, reset: { kvDashboardUrl: string, keys: ["pin_hash", "session_secret"] } }`
+  `reset` powers the in-app "Forgot your PIN?" guide (see [RESET-PIN.md](RESET-PIN.md)). `kvDashboardUrl` is
+  `https://dash.cloudflare.com/?to=/:account/workers/kv/namespaces/<KV_NAMESPACE_ID>` when the `KV_NAMESPACE_ID`
+  var is set, else `https://dash.cloudflare.com/?to=/:account/workers/kv/namespaces`. Public (no cookie needed).
 - `POST /api/auth/setup` `{ pin }` → `204`. Only works when no PIN is set (else `409 pin_already_set`).
   PIN must match `/^\d{6,12}$/` (else `400 invalid_pin`). Also logs the client in (sets cookie).
 - `POST /api/auth/login` `{ pin }` → `204` + cookie. Wrong PIN → `401 invalid_credentials`.

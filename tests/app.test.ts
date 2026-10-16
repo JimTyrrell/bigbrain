@@ -68,9 +68,24 @@ describe("app", () => {
     expect((await json(missing)).error.code).toBe("not_found");
   });
 
+  it("status includes PIN reset info with a KV dashboard deep link", async () => {
+    const env = makeEnv();
+    const generic = await json(await call(env, "/api/auth/status"));
+    expect(generic.reset).toEqual({
+      kvDashboardUrl: "https://dash.cloudflare.com/?to=/:account/workers/kv/namespaces",
+      keys: ["pin_hash", "session_secret"],
+    });
+
+    const withId = { ...env, KV_NAMESPACE_ID: "90a350cf2180411c9bb689002d85b7cb" } as Env;
+    expect((await json(await call(withId, "/api/auth/status"))).reset).toEqual({
+      kvDashboardUrl: "https://dash.cloudflare.com/?to=/:account/workers/kv/namespaces/90a350cf2180411c9bb689002d85b7cb",
+      keys: ["pin_hash", "session_secret"],
+    });
+  });
+
   it("runs the auth flow: setup, status, login, change PIN, logout", async () => {
     const env = makeEnv();
-    expect(await json(await call(env, "/api/auth/status"))).toEqual({ pinSet: false, authenticated: false });
+    expect(await json(await call(env, "/api/auth/status"))).toMatchObject({ pinSet: false, authenticated: false });
 
     expect((await call(env, "/api/auth/setup", post({ pin: "12" }))).status).toBe(400);
     const setup = await call(env, "/api/auth/setup", post({ pin: "123456" }));
@@ -81,7 +96,7 @@ describe("app", () => {
     expect((await call(env, "/api/auth/setup", post({ pin: "999999" }))).status).toBe(409);
 
     let cookie = cookieOf(setup);
-    expect(await json(await call(env, "/api/auth/status", { cookie }))).toEqual({ pinSet: true, authenticated: true });
+    expect(await json(await call(env, "/api/auth/status", { cookie }))).toMatchObject({ pinSet: true, authenticated: true });
     expect((await call(env, "/api/models", { cookie })).status).toBe(200);
 
     const bad = await call(env, "/api/auth/login", post({ pin: "000000" }));

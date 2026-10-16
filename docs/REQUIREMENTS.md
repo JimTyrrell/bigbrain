@@ -35,7 +35,8 @@ has an ID so the validator can map checks to it.
 - **R2.5** Change PIN from the Settings panel in the web UI (requires the current PIN).
 - **R2.6** Reset a forgotten PIN without the CLI: in the Cloudflare dashboard open
   KV → `BIGBRAIN_KV` → delete key `pin_hash`. The next visit shows **Set your PIN** again.
-  Existing sessions are also invalidated (delete `session_secret` too).
+  Existing sessions are also invalidated (delete `session_secret` too). Step-by-step
+  instructions are available in-app on the lock screen and in Settings (see [RESET-PIN.md](RESET-PIN.md)).
 - **R2.7** Lock button in the UI logs out (clears cookie).
 - **R2.8** Standard hardening: CSP, `X-Frame-Options: DENY`, `Referrer-Policy`, no inline
   third-party scripts, request body limit 25 MB, input validation on every route.

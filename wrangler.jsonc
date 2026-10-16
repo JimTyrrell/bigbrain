@@ -4,8 +4,6 @@
   "main": "src/worker/index.ts",
   "compatibility_date": "2026-10-01",
   "compatibility_flags": ["nodejs_compat"],
-  "account_id": "c3f0432a9a3150e81227f6ad8e98656a",
-  "routes": [{ "pattern": "bigbrain.designaticlabs.com", "custom_domain": true, "zone_name": "designaticlabs.com" }],
   "assets": {
     "directory": "./dist/web",
     "binding": "ASSETS",
@@ -27,6 +25,8 @@
   "vars": {
     "DEFAULT_MODEL": "@cf/meta/llama-4-scout-17b-16e-instruct",
     "EMBEDDING_MODEL": "@cf/baai/bge-m3",
-    "WHISPER_MODEL": "@cf/openai/whisper-large-v3-turbo"
+    "WHISPER_MODEL": "@cf/openai/whisper-large-v3-turbo",
+    "KV_NAMESPACE_ID": "90a350cf2180411c9bb689002d85b7cb",
+    "PUBLIC_URL": "https://bigbrain.designaticlabs.com"
   }
 }

@@ -38,10 +38,24 @@ async function loginResponse(c: Context<AppEnv>, secret?: string) {
   return c.body(null, 204);
 }
 
+/** KV keys to delete (in the Cloudflare dashboard) to reset a forgotten PIN. */
+export const RESET_KEYS = ["pin_hash", "session_secret"] as const;
+
+/** Dashboard deep link; `:account` lets Cloudflare fill in the signed-in account. */
+export function kvDashboardUrl(namespaceId?: string): string {
+  const base = "https://dash.cloudflare.com/?to=/:account/workers/kv/namespaces";
+  const id = namespaceId?.trim();
+  return id ? `${base}/${encodeURIComponent(id)}` : base;
+}
+
 app.get("/auth/status", async (c) => {
   const pinSet = (await c.env.KV.get("pin_hash")) !== null;
   const authenticated = pinSet && (await isAuthenticated(c.env, getCookie(c, SESSION_COOKIE)));
-  return c.json({ pinSet, authenticated });
+  return c.json({
+    pinSet,
+    authenticated,
+    reset: { kvDashboardUrl: kvDashboardUrl(c.env.KV_NAMESPACE_ID), keys: [...RESET_KEYS] },
+  });
 });
 
 app.post("/auth/setup", async (c) => {

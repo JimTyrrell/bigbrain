@@ -5,6 +5,7 @@ import { useApp } from "../state/AppState";
 import { Spinner } from "./ui";
 import { cx, formatDuration } from "../lib/format";
 import { Logo } from "./Logo";
+import { ResetPinGuide } from "./ResetPinGuide";
 
 const PIN_RE = /^\d{6,12}$/;
 
@@ -77,10 +78,18 @@ export function StrengthMeter({ pin, id }: { pin: string; id?: string }) {
 
 export function LockScreen() {
   const { auth, onAuthenticated, checkAuth } = useApp();
+  const [guideOpen, setGuideOpen] = useState(false);
+  const toggleRef = useRef<HTMLButtonElement>(null);
+  const showGuide = guideOpen && auth === "login";
+
+  const closeGuide = () => {
+    setGuideOpen(false);
+    requestAnimationFrame(() => toggleRef.current?.focus());
+  };
 
   return (
     <main className="flex min-h-full items-center justify-center bg-bg-subtle px-4 py-12">
-      <div className="w-full max-w-sm">
+      <div className={cx("w-full", showGuide ? "max-w-xl" : "max-w-sm")}>
         <div className="mb-8 flex flex-col items-center text-center">
           <Logo className="size-12" />
           <h1 className="mt-4 text-2xl font-semibold tracking-tight">BigBrain</h1>
@@ -100,8 +109,29 @@ export function LockScreen() {
             </div>
           )}
           {auth === "setup" && <SetupForm onDone={onAuthenticated} />}
-          {auth === "login" && <LoginForm onDone={onAuthenticated} />}
+          {auth === "login" && (
+            <>
+              <LoginForm onDone={onAuthenticated} />
+              <div className="mt-4 text-center">
+                <button
+                  ref={toggleRef}
+                  type="button"
+                  className="text-sm text-accent hover:underline"
+                  aria-expanded={guideOpen}
+                  aria-controls="reset-pin-guide"
+                  onClick={() => (guideOpen ? closeGuide() : setGuideOpen(true))}
+                >
+                  Forgot your PIN?
+                </button>
+              </div>
+            </>
+          )}
         </div>
+        {showGuide && (
+          <div id="reset-pin-guide" className="mt-4">
+            <ResetPinGuide onClose={closeGuide} focusOnMount className="bg-surface shadow-pop" />
+          </div>
+        )}
         <p className="mt-6 text-center text-xs text-faint">Private. Your PIN never leaves this site in clear.</p>
       </div>
     </main>
@@ -173,6 +203,12 @@ function SetupForm({ onDone }: { onDone: () => void }) {
         {busy ? <Spinner /> : null}
         Set PIN and continue
       </button>
+      <details className="text-xs text-faint">
+        <summary className="cursor-pointer select-none hover:text-muted">Why am I seeing this?</summary>
+        <p className="mt-1.5 leading-5 text-muted">
+          No PIN is set yet: this is either the first run, or the PIN was reset by deleting it in Cloudflare KV.
+        </p>
+      </details>
     </form>
   );
 }

@@ -29,6 +29,21 @@ Live: **https://bigbrain.designaticlabs.com**
 - [API contract](docs/API.md)
 - [Seeding transcripts](seeds/README.md)
 
+## Deploy your own copy (one click)
+
+[![Deploy to Cloudflare](https://deploy.workers.cloudflare.com/button)](https://deploy.workers.cloudflare.com/?url=https://github.com/JimTyrrell/bigbrain)
+
+`https://deploy.workers.cloudflare.com/?url=https://github.com/JimTyrrell/bigbrain`
+
+Cloudflare forks the repo into your GitHub, provisions the D1 database, KV namespace,
+Vectorize index and Workers AI binding declared in `wrangler.jsonc`, runs `npm run build`
+and `npm run deploy` (which applies the D1 migrations), and sets up automatic deploys on
+push. After the first deploy, open the `*.workers.dev` URL, set your PIN, and optionally add
+a custom domain under **Settings → Domains & Routes**. The Vectorize index needs one manual
+step on a fresh account: in the dashboard (or `npx wrangler vectorize create-metadata-index
+bigbrain-vectors --property-name=brain_id --type=string`) add a string metadata index on
+`brain_id`, otherwise retrieval cannot filter by brain.
+
 ## Running it yourself
 
 ```bash
@@ -69,3 +84,6 @@ verbatim-quote verification, model switching, Whisper, lockout) and exits non-ze
 
 No CLI needed. In the Cloudflare dashboard: **Workers & Pages → KV → `BIGBRAIN_KV`**, delete
 the keys `pin_hash` and `session_secret`, then reload the site. It will ask you to set a new PIN.
+
+Step-by-step guide with a deep link and the CLI alternative: [docs/RESET-PIN.md](docs/RESET-PIN.md).
+The same instructions are built into the app (lock screen → **Forgot your PIN?**, and Settings).

@@ -1,12 +1,13 @@
-import { useEffect, useState, type FormEvent } from "react";
-import { ExternalLink, KeyRound } from "lucide-react";
+import { useEffect, useRef, useState, type FormEvent } from "react";
+import { ChevronDown, ExternalLink, KeyRound } from "lucide-react";
 import { api, ApiError } from "../api/client";
 import { useApp } from "../state/AppState";
 import { Modal } from "./Dialog";
 import { useToast } from "./Toasts";
 import { Spinner } from "./ui";
 import { StrengthMeter } from "./LockScreen";
-import { formatTokens } from "../lib/format";
+import { cx, formatTokens } from "../lib/format";
+import { ResetPinGuide } from "./ResetPinGuide";
 
 const SITE_URL = "https://bigbrain.designaticlabs.com";
 
@@ -73,26 +74,7 @@ function SettingsBody() {
 
       <ChangePin />
 
-      <section aria-labelledby="set-forgot" className="rounded-xl border border-line bg-bg-subtle p-4">
-        <h3 id="set-forgot" className="flex items-center gap-2 text-sm font-semibold">
-          <KeyRound className="size-4 text-muted" aria-hidden />
-          Forgot your PIN?
-        </h3>
-        <ol className="mt-2 list-decimal space-y-1 pl-5 text-sm leading-6 text-muted">
-          <li>
-            Open the Cloudflare dashboard → <strong className="font-medium text-fg">Workers &amp; Pages</strong> →{" "}
-            <strong className="font-medium text-fg">KV</strong>.
-          </li>
-          <li>
-            Open the <code className="rounded bg-surface-2 px-1 font-mono text-xs">BIGBRAIN_KV</code> namespace.
-          </li>
-          <li>
-            Delete the key <code className="rounded bg-surface-2 px-1 font-mono text-xs">pin_hash</code> (and{" "}
-            <code className="rounded bg-surface-2 px-1 font-mono text-xs">session_secret</code> to sign out every device).
-          </li>
-          <li>Reload the site. You'll be asked to set a new PIN.</li>
-        </ol>
-      </section>
+      <ResetInstructions />
 
       <section aria-labelledby="set-site" className="text-sm">
         <h3 id="set-site" className="text-sm font-semibold">
@@ -110,6 +92,43 @@ function SettingsBody() {
         {here !== SITE_URL && <p className="mt-1 text-xs text-faint">You're currently on {here}</p>}
       </section>
     </div>
+  );
+}
+
+function ResetInstructions() {
+  const [open, setOpen] = useState(false);
+  const toggleRef = useRef<HTMLButtonElement>(null);
+  const close = () => {
+    setOpen(false);
+    requestAnimationFrame(() => toggleRef.current?.focus());
+  };
+  return (
+    <section aria-labelledby="set-forgot">
+      <h3 id="set-forgot" className="flex items-center gap-2 text-sm font-semibold">
+        <KeyRound className="size-4 text-muted" aria-hidden />
+        Reset access
+      </h3>
+      <p className="mt-1 text-sm text-muted">
+        If you ever get locked out, you can reset the PIN from the Cloudflare dashboard. These steps are also on the lock
+        screen.
+      </p>
+      <button
+        ref={toggleRef}
+        type="button"
+        className="btn btn-secondary btn-sm mt-3"
+        aria-expanded={open}
+        aria-controls="settings-reset-guide"
+        onClick={() => (open ? close() : setOpen(true))}
+      >
+        {open ? "Hide reset instructions" : "Show reset instructions"}
+        <ChevronDown className={cx("size-4 transition-transform", open && "rotate-180")} aria-hidden />
+      </button>
+      {open && (
+        <div id="settings-reset-guide" className="mt-3">
+          <ResetPinGuide onClose={close} focusOnMount />
+        </div>
+      )}
+    </section>
   );
 }
 
