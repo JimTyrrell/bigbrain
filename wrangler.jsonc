@@ -20,13 +20,13 @@
     }
   ],
   "vectorize": [{ "binding": "VECTORIZE", "index_name": "bigbrain-vectors", "remote": true }],
-  "kv_namespaces": [{ "binding": "KV", "id": "90a350cf2180411c9bb689002d85b7cb" }],
+  "kv_namespaces": [{ "binding": "KV", "id": "4cdb52e461014a1c96085abacf6f9254" }],
   "observability": { "enabled": true },
   "vars": {
     "DEFAULT_MODEL": "@cf/meta/llama-4-scout-17b-16e-instruct",
     "EMBEDDING_MODEL": "@cf/baai/bge-m3",
     "WHISPER_MODEL": "@cf/openai/whisper-large-v3-turbo",
-    "KV_NAMESPACE_ID": "90a350cf2180411c9bb689002d85b7cb",
+    "KV_NAMESPACE_ID": "4cdb52e461014a1c96085abacf6f9254",
     "PUBLIC_URL": "https://bigbrain.designaticlabs.com"
   }
 }

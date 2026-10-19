@@ -11,7 +11,7 @@ under the PIN field) and in **Settings → Forgot your PIN? → Show reset instr
 ## Steps (Cloudflare dashboard)
 
 1. Open the Cloudflare dashboard at the KV namespace:
-   <https://dash.cloudflare.com/?to=/:account/workers/kv/namespaces/90a350cf2180411c9bb689002d85b7cb>
+   <https://dash.cloudflare.com/?to=/:account/workers/kv/namespaces/4cdb52e461014a1c96085abacf6f9254>
    (the `:account` placeholder makes the dashboard fill in your account; if the namespace id
    changes, use <https://dash.cloudflare.com/?to=/:account/workers/kv/namespaces> and pick it from the list).
    In the app, the **Open KV in Cloudflare** button uses the id from the `KV_NAMESPACE_ID` var.
@@ -34,8 +34,8 @@ The real dashboard may differ slightly in layout and wording.
 ## Alternative: CLI
 
 ```sh
-npx wrangler kv key delete --namespace-id 90a350cf2180411c9bb689002d85b7cb --remote pin_hash
-npx wrangler kv key delete --namespace-id 90a350cf2180411c9bb689002d85b7cb --remote session_secret
+npx wrangler kv key delete --namespace-id 4cdb52e461014a1c96085abacf6f9254 --remote pin_hash
+npx wrangler kv key delete --namespace-id 4cdb52e461014a1c96085abacf6f9254 --remote session_secret
 ```
 
 ## Notes
