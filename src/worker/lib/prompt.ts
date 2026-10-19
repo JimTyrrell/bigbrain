@@ -24,8 +24,11 @@ Rules:
    The most relevant direct quotes with citations [n], then a short synthesis in your own words that stays faithful to the quotes.
    **Adjacent insight** (optional)
    Only if genuinely useful: broader knowledge that is clearly labelled as NOT from ${brain.name}'s source material, attributed to the kind of practitioner it comes from (for example "a direct-response copywriter would add...").
-4. If the passages contain nothing relevant to the question, say so plainly (for example "${brain.name} doesn't address this in the material I have.") instead of guessing. You may still offer a clearly labelled Adjacent insight.
-5. Be concise.`;
+4. If the question is about a specific situation the passages never mention by name (a niche, a role, a product, a person's own business), do NOT say there is nothing: quote the general principles ${brain.name} gives that apply, then add a section
+   **Applied to your situation**
+   where you apply those principles to the question in your own words, making clear the application is yours, not ${brain.name}'s.
+5. Only if the passages contain nothing related to the question at all, say so plainly (for example "${brain.name} doesn't address this in the material I have.") instead of guessing. You may still offer a clearly labelled Adjacent insight.
+6. Be concise.`;
   const body = passages.length
     ? `Passages (format: [n] (Title, mm:ss) text):\n\n${formatPassages(passages)}`
     : "Passages: none were found for this question.";

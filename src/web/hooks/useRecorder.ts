@@ -2,7 +2,8 @@ import { useCallback, useEffect, useRef, useState } from "react";
 
 export type RecorderState = "idle" | "starting" | "recording" | "transcribing";
 
-const MIN_MS = 400;
+/** Recordings shorter than this are discarded with a hint instead of being sent. */
+export const MIN_MS = 500;
 
 function pickMime(): string | undefined {
   if (typeof MediaRecorder === "undefined") return undefined;
@@ -37,12 +38,14 @@ export function micErrorMessage(e: unknown): string {
 
 /**
  * MediaRecorder wrapper. `start()` asks for the mic and begins recording; `stop()` finishes and
- * hands the blob to `onAudio`. Calling `stop()` while still starting stops as soon as it starts.
+ * hands the blob to `onAudio`. `isLive()` says whether audio is actually being captured yet
+ * (false while the browser is still waiting on getUserMedia, e.g. the permission prompt).
+ * Calling `stop()` before the recorder is live cancels the attempt without sending anything.
  */
 export function useRecorder(opts: {
   onAudio: (blob: Blob, filename: string) => Promise<void>;
   onError: (message: string) => void;
-  onTooShort?: () => void;
+  onTooShort?: (ms: number) => void;
 }) {
   const [state, setState] = useState<RecorderState>("idle");
   const [elapsed, setElapsed] = useState(0);
@@ -86,6 +89,8 @@ export function useRecorder(opts: {
     if (rec.state !== "inactive") rec.stop();
   }, []);
 
+  const isLive = useCallback(() => recRef.current?.state === "recording", []);
+
   const start = useCallback(async () => {
     if (recRef.current || state !== "idle") return;
     stopRequestedRef.current = false;
@@ -105,8 +110,10 @@ export function useRecorder(opts: {
       optsRef.current.onError(micErrorMessage(e));
       return;
     }
-    if (cancelledRef.current) {
+    if (cancelledRef.current || stopRequestedRef.current) {
+      // unmounted, or the user stopped before the mic was ready: nothing worth sending
       stream.getTracks().forEach((t) => t.stop());
+      if (!cancelledRef.current) setState("idle");
       return;
     }
     const mime = pickMime();
@@ -132,9 +139,10 @@ export function useRecorder(opts: {
       if (cancelledRef.current) return;
       const blob = new Blob(chunksRef.current, { type });
       chunksRef.current = [];
+      console.info(`[voice] recorded ${blob.size} bytes, ${blob.type || "no type"}, ${duration} ms`);
       if (duration < MIN_MS || blob.size < 1000) {
         setState("idle");
-        optsRef.current.onTooShort?.();
+        optsRef.current.onTooShort?.(duration);
         return;
       }
       setState("transcribing");
@@ -144,16 +152,17 @@ export function useRecorder(opts: {
         setState("idle");
       }
     };
+    // The recorder stops itself after an error (e.g. the mic was unplugged); onstop then sends
+    // whatever was captured, or reports it as too short.
+    rec.onerror = (ev) => console.error("[voice] MediaRecorder error", ev);
     startedAtRef.current = Date.now();
     setElapsed(0);
-    rec.start(250);
+    // No timeslice: one chunk at stop() is always a well-formed file (Safari's fragmented MP4
+    // timeslices have produced unplayable blobs); dataavailable always fires before onstop.
+    rec.start();
     setState("recording");
     timerRef.current = window.setInterval(() => setElapsed((Date.now() - startedAtRef.current) / 1000), 200);
-    if (stopRequestedRef.current) {
-      // released before the mic was ready: give it a moment so there's something to send
-      window.setTimeout(() => rec.state !== "inactive" && rec.stop(), MIN_MS);
-    }
   }, [cleanup, state]);
 
-  return { state, elapsed, start, stop };
+  return { state, elapsed, start, stop, isLive };
 }
