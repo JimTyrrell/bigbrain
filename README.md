@@ -6,9 +6,17 @@ Whisper), D1, Vectorize and KV. No third-party AI keys.
 
 Live: **https://bigbrain.designaticlabs.com**
 
-**The workshop, recorded:** https://www.skool.com/sovereign-operator/about. Join, then open
-Classroom and find the BigBrain live build: the whole thing built from one prompt, every step
-on screen.
+## Watch it get built, or get help
+
+BigBrain was built live, from one prompt, in the **Sovereign Operator** community on Skool:
+https://www.skool.com/sovereign-operator/about
+
+Join, open the Classroom, and find the BigBrain live build: four short lessons, every step on
+screen, the prompt included. Stuck deploying your own copy, or want to point it at your own
+material? Ask in the community. That is where the help is.
+
+The prompt itself, v1 and v2: [docs/PROMPT.md](docs/PROMPT.md).
+
 **Licence:** PolyForm Shield. Deploy it for your own business and clients and earn with it;
 don't set it up for other businesses or resell it. Plain English in `NOTICE.md`.
 
@@ -34,6 +42,7 @@ don't set it up for other businesses or resell it. Plain English in `NOTICE.md`.
 - [Architecture](docs/ARCHITECTURE.md)
 - [API contract](docs/API.md)
 - [Seeding transcripts](seeds/README.md)
+- [The prompt that built it](docs/PROMPT.md)
 
 ## Deploy your own copy (one click)
 
