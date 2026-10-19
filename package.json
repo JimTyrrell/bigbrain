@@ -2,8 +2,9 @@
   "name": "bigbrain",
   "version": "0.1.0",
   "private": true,
+  "description": "A PIN-protected chat over Brains of transcripts and documents that quotes the source verbatim with timestamped links. Runs entirely on Cloudflare: Workers AI, D1, Vectorize, KV. Built live in one prompt.",
+  "license": "PolyForm-Shield-1.0.0",
   "type": "module",
-  "description": "BigBrain: personal RAG chat over named 'brains' of documents, running entirely on Cloudflare Workers AI.",
   "scripts": {
     "dev": "wrangler dev",
     "dev:web": "vite",

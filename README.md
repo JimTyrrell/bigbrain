@@ -6,6 +6,12 @@ Whisper), D1, Vectorize and KV. No third-party AI keys.
 
 Live: **https://bigbrain.designaticlabs.com**
 
+**The workshop, recorded:** https://www.skool.com/sovereign-operator/about. Join, then open
+Classroom and find the BigBrain live build: the whole thing built from one prompt, every step
+on screen.
+**Licence:** PolyForm Shield. Deploy it for your own business and clients and earn with it;
+don't set it up for other businesses or resell it. Plain English in `NOTICE.md`.
+
 ## What it does
 
 - **Brains** in the left sidebar: add, rename, delete. Each brain has a name, a one-line
@@ -87,3 +93,7 @@ the keys `pin_hash` and `session_secret`, then reload the site. It will ask you 
 
 Step-by-step guide with a deep link and the CLI alternative: [docs/RESET-PIN.md](docs/RESET-PIN.md).
 The same instructions are built into the app (lock screen → **Forgot your PIN?**, and Settings).
+
+## Licence
+
+PolyForm Shield 1.0.0. See `LICENSE` and the plain-English FAQ in `NOTICE.md`.
